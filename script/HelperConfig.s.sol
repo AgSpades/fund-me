@@ -13,6 +13,8 @@ contract HelperConfig is Script {
 
     NetworkConfig public activeNetworkConfig;
     MockV3Aggregator private mockPriceFeed;
+    uint8 public constant DECIMALS = 8;
+    int256 public constant INITIAL_PRICE = 2000e8;
 
     constructor() {
         if (block.chainid == 11155111) {
@@ -44,16 +46,15 @@ contract HelperConfig is Script {
         return mainnetConfig;
     }
 
- function getAnvilEthConfig() public returns (NetworkConfig memory) {
-    vm.startBroadcast();
-    mockPriceFeed = new MockV3Aggregator(8, 2000e8);
-    vm.stopBroadcast();
+    function getAnvilEthConfig() public returns (NetworkConfig memory) {
+        vm.startBroadcast();
+        mockPriceFeed = new MockV3Aggregator(DECIMALS, INITIAL_PRICE);
+        vm.stopBroadcast();
 
-    NetworkConfig memory anvilConfig = NetworkConfig({
-        priceFeed: address(mockPriceFeed)
-    });
+        NetworkConfig memory anvilConfig = NetworkConfig({
+            priceFeed: address(mockPriceFeed)
+        });
 
-    return anvilConfig;
-
-}
+        return anvilConfig;
+    }
 }
