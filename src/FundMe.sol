@@ -31,11 +31,10 @@ contract FundMe {
         funders.push(msg.sender);
     }
 
-    function getVersion() public view returns (uint256){
-    AggregatorV3Interface priceFeed = AggregatorV3Interface(s_priceFeed);
-    return priceFeed.version();
-
-}
+    function getVersion() public view returns (uint256) {
+        AggregatorV3Interface priceFeed = AggregatorV3Interface(s_priceFeed);
+        return priceFeed.version();
+    }
 
     modifier onlyOwner() {
         // require(msg.sender == owner);

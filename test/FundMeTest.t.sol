@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.18;
+
 import {FundMe} from "../src/FundMe.sol";
 import {Test, console} from "forge-std/Test.sol";
 import {DeployFundMe} from "../script/DeployFundMe.s.sol";
@@ -15,6 +16,11 @@ contract FundMeTest is Test {
 
     function testMinimumDollarIsFive() public view {
         assertEq(fundMe.MINIMUM_USD(), 5e18);
+    }
+
+    function testFundFailsWIthoutEnoughETH() public {
+        vm.expectRevert(); // <- The next line after this one should revert! If not test fails.
+        fundMe.fund(); // <- We send 0 value
     }
 
     function testOwnerIsMsgSender() public view {
