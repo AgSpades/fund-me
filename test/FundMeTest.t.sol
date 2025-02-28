@@ -30,4 +30,12 @@ contract FundMeTest is Test {
     function testCheckPriceFeedVersion() public view {
         assertEq(fundMe.getVersion(), 4);
     }
+
+    function testFundUpdatesFundDataStructure() public {
+    fundMe.fund{value: 10 ether}();
+    uint256 amountFunded = fundMe.getAddressToAmountFunded(address(this));
+    assertEq(amountFunded, 10 ether);
+
+    }
+
 }
