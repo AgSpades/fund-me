@@ -49,4 +49,13 @@ contract FundMeTest is Test {
         uint256 amountFunded = fundMe.getAddressToAmountFunded(alice);
         assertEq(amountFunded, SEND_VALUE);
     }
+
+    function testAddsFunderToArrayOfFunders() public {
+        vm.startPrank(alice);
+        fundMe.fund{value: SEND_VALUE}();
+        vm.stopPrank();
+
+        address funder = fundMe.getFunder(0);
+        assertEq(funder, alice);
+    }
 }
