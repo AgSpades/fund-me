@@ -16,7 +16,7 @@ contract FundMe {
     address[] public s_funders;
 
     // Could we make this constant?  /* hint: no! We should make it immutable! */
-    address public /* immutable */ i_owner;
+    address public immutable  i_owner;
     uint256 public constant MINIMUM_USD = 5 * 10 ** 18;
 
     constructor(address priceFeed) {

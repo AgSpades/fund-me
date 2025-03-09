@@ -58,4 +58,13 @@ contract FundMeTest is Test {
         address funder = fundMe.getFunder(0);
         assertEq(funder, alice);
     }
+
+    function testOnlyOwnerCanWithdraw() public {
+        vm.prank(alice);
+        fundMe.fund{value: SEND_VALUE}();
+
+        vm.expectRevert(); // <- The next line after this one should revert! If not test fails.
+        vm.prank(alice);
+        fundMe.withdraw();
+    }
 }
