@@ -29,7 +29,7 @@ contract FundMeTest is Test {
     }
 
     function testOwnerIsMsgSender() public view {
-        assertEq(fundMe.i_owner(), msg.sender);
+        assertEq(fundMe.getOwner(), msg.sender);
     }
 
     function testCheckPriceFeedVersion() public view {
@@ -50,6 +50,12 @@ contract FundMeTest is Test {
         assertEq(amountFunded, SEND_VALUE);
     }
 
+    modifier funded() {
+        vm.prank(alice);
+        fundMe.fund{value: SEND_VALUE}();
+        _;
+    }
+
     function testAddsFunderToArrayOfFunders() public {
         vm.startPrank(alice);
         fundMe.fund{value: SEND_VALUE}();
@@ -59,12 +65,27 @@ contract FundMeTest is Test {
         assertEq(funder, alice);
     }
 
-    function testOnlyOwnerCanWithdraw() public {
+    function testOnlyOwnerCanWithdraw() public funded {
         vm.prank(alice);
-        fundMe.fund{value: SEND_VALUE}();
-
         vm.expectRevert(); // <- The next line after this one should revert! If not test fails.
-        vm.prank(alice);
         fundMe.withdraw();
+    }
+
+    function testWithdrawWithASingleFunder() public funded {
+        // Arrange
+        uint256 startingOwnerBalance = fundMe.getOwner().balance;
+        uint256 startingFundMeBalance = address(fundMe).balance;
+        // Act
+        vm.prank(fundMe.getOwner());
+        fundMe.withdraw();
+        //Assert
+        uint256 endingOwnerBalance = fundMe.getOwner().balance;
+        uint256 endingFundMeBalance = address(fundMe).balance;
+
+        assertEq(endingFundMeBalance, 0);
+        assertEq(
+            startingOwnerBalance + startingFundMeBalance,
+            endingOwnerBalance
+        );
     }
 }
