@@ -71,7 +71,7 @@ contract FundMeTest is Test {
         fundMe.withdraw();
     }
 
-    function testWithdrawWithASingleFunder() public funded {
+    function testWithdrawFromASingleFunder() public funded {
         // Arrange
         uint256 startingOwnerBalance = fundMe.getOwner().balance;
         uint256 startingFundMeBalance = address(fundMe).balance;
@@ -119,5 +119,14 @@ contract FundMeTest is Test {
             (numberOfFunders + 1) * SEND_VALUE ==
                 fundMe.getOwner().balance - startingOwnerBalance
         );
+    }
+
+    function testPrintStorageData() public view {
+        for (uint256 i = 0; i < 3; i++) {
+            bytes32 value = vm.load(address(fundMe), bytes32(i));
+            console.log("Value at location", i, ":");
+            console.logBytes32(value);
+        }
+        console.log("PriceFeed address:", address(fundMe.getPriceFeed()));
     }
 }
